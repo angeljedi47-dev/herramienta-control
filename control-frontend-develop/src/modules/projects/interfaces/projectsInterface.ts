@@ -5,7 +5,8 @@ export interface IProjectDB {
     nombre: string;
     descripcion: string;
     tipo: 'Nuevo Sistema' | 'Actualización' | 'Mantenimiento';
-    estado: 'Planeación' | 'Desarrollo' | 'Pruebas' | 'Liberado';
+    id_estado_proyecto: number;
+    estadoProyecto?: any;
     fecha_inicio: string | null;
     fecha_fin_estimada: string | null;
     fecha_creacion: string;
@@ -21,7 +22,8 @@ export interface IProjectMapped {
     nombre: string;
     descripcion: string;
     tipo: 'Nuevo Sistema' | 'Actualización' | 'Mantenimiento';
-    estado: 'Planeación' | 'Desarrollo' | 'Pruebas' | 'Liberado';
+    id_estado_proyecto: number;
+    estadoProyecto?: any;
     fechaInicio: Date | null;
     fechaFinEstimada: Date | null;
     fechaCreacion: Date;
@@ -43,8 +45,9 @@ export type IProjectPaginatedResponse = IResponse<
 export interface IProjectStatusDB {
     id_proyecto: number;
     nombre: string;
-    estado: 'Planeación' | 'Desarrollo' | 'Pruebas' | 'Liberado';
     tipo: 'Nuevo Sistema' | 'Actualización' | 'Mantenimiento';
+    id_estado_proyecto?: number;
+    estadoProyecto?: any;
     fecha_inicio: string | null;
     fecha_fin_estimada: string | null;
     porcentaje: number;
@@ -53,8 +56,9 @@ export interface IProjectStatusDB {
 export interface IProjectStatusMapped {
     idProyecto: number;
     nombre: string;
-    estado: 'Planeación' | 'Desarrollo' | 'Pruebas' | 'Liberado';
     tipo: 'Nuevo Sistema' | 'Actualización' | 'Mantenimiento';
+    id_estado_proyecto?: number;
+    estadoProyecto?: any;
     fechaInicio: Date | null;
     fechaFinEstimada: Date | null;
     porcentaje: number;
@@ -67,7 +71,7 @@ export type IProjectStatusResponse = IResponse<IProjectStatusMapped[]>;
 export interface ICreateProject
     extends Pick<
         IProjectDB,
-        'nombre' | 'descripcion' | 'tipo' | 'estado' | 'fecha_inicio' | 'fecha_fin_estimada' | 'porcentaje'
+        'nombre' | 'descripcion' | 'tipo' | 'id_estado_proyecto' | 'fecha_inicio' | 'fecha_fin_estimada' | 'porcentaje'
     > {
     id_proyecto?: number;
     id_tipo_informe?: number;

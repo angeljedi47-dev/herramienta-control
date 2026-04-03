@@ -9,18 +9,12 @@ import {
 } from 'typeorm';
 import { UsuariosSistemaEntity } from 'src/modules/users/entities/usuarios-sistema.entity';
 import { TiposInformeEntity } from 'src/modules/tipos-informe/entities/tipos-informe.entity';
+import { EstadosProyectoEntity } from 'src/modules/estados-proyecto/entities/estados-proyecto.entity';
 
 export enum TipoProyecto {
     NUEVO_SISTEMA = 'Nuevo Sistema',
     ACTUALIZACION = 'Actualización',
     MANTENIMIENTO = 'Mantenimiento',
-}
-
-export enum EstadoProyecto {
-    PLANEACION = 'Planeación',
-    DESARROLLO = 'Desarrollo',
-    PRUEBAS = 'Pruebas',
-    LIBERADO = 'Liberado',
 }
 
 @Entity({ name: 'proyectos' })
@@ -41,12 +35,12 @@ export class ProyectosEntity {
     })
     tipo: TipoProyecto;
 
-    @Column({
-        type: 'enum',
-        enum: EstadoProyecto,
-        default: EstadoProyecto.PLANEACION,
-    })
-    estado: EstadoProyecto;
+    @Column({ type: 'int', nullable: true })
+    id_estado_proyecto: number;
+
+    @ManyToOne(() => EstadosProyectoEntity, (estado) => estado.proyectos)
+    @JoinColumn({ name: 'id_estado_proyecto' })
+    estadoProyecto: EstadosProyectoEntity;
 
     @Column({ type: 'date', nullable: true })
     fecha_inicio: Date;

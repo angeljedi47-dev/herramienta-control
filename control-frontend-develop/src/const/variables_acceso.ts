@@ -1,6 +1,7 @@
 export enum MODULOS_ACCESO {
     USUARIOS = 1,
     ROLES = 2,
+    PROYECTOS = 3,
 }
 
 export enum OPERACIONES_ACCESO {

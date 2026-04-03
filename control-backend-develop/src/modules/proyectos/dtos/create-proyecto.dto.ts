@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
-import { TipoProyecto, EstadoProyecto } from '../entities/proyectos.entity';
+import { IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import { TipoProyecto } from '../entities/proyectos.entity';
 
 export class CreateProyectoDto {
     @ApiProperty({ description: 'Nombre del proyecto', maxLength: 300 })
@@ -19,10 +19,10 @@ export class CreateProyectoDto {
     @IsEnum(TipoProyecto)
     tipo: TipoProyecto;
 
-    @ApiProperty({ description: 'Estado actual del proyecto', enum: EstadoProyecto })
-    @IsNotEmpty()
-    @IsEnum(EstadoProyecto)
-    estado: EstadoProyecto;
+    @ApiProperty({ description: 'ID del Estado del Proyecto' })
+    @IsNumber({}, { message: 'El ID de estado debe ser un número' })
+    @IsNotEmpty({ message: 'El ID de estado es obligatorio' })
+    id_estado_proyecto: number;
 
     @ApiPropertyOptional({ description: 'Fecha de inicio del proyecto', type: String, format: 'date' })
     @IsOptional()

@@ -1,4 +1,4 @@
-import { House, UserCog, Users, Briefcase } from 'lucide-react';
+import { House, UserCog, Users, Briefcase, ShieldAlert } from 'lucide-react';
 import { MODULOS_ACCESO } from '@/const/variables_acceso';
 import { INavSidebarItem } from './types';
 
@@ -31,8 +31,14 @@ export const navOptions: INavSidebarItem[] = [
     },
     {
         id: 5,
+        name: 'Estados de Proyecto',
+        url: '/admin/estados-proyecto',
+        icon: ShieldAlert,
+    },
+    {
+        id: 6,
         name: 'Tipos de Informe',
         url: '/admin/tipos-informe',
-        icon: Briefcase,
+        icon: ShieldAlert,
     },
 ];

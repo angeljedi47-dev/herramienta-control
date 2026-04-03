@@ -8,6 +8,7 @@ import { useCreateProject } from '../hooks';
 import { IProjectMapped } from '../interfaces';
 import { useQuery } from '@tanstack/react-query';
 import { getTiposInforme } from '@/modules/tipos-informe/apis/tiposInforme.api';
+import { getEstadosProyecto } from '@/modules/estados-proyecto/apis/estadosProyecto.api';
 
 interface IProjectFormProps {
     onSuccess: () => void;
@@ -23,6 +24,11 @@ const ProjectForm = ({ onSuccess, projectToEdit }: IProjectFormProps) => {
     const { data: tiposInforme, isLoading: isTiposLoading } = useQuery({
         queryKey: ['GET_TIPOS_INFORME'],
         queryFn: getTiposInforme,
+    });
+
+    const { data: estadosProyecto, isLoading: isEstadosLoading } = useQuery({
+        queryKey: ['GET_ESTADOS_PROYECTO'] as any,
+        queryFn: getEstadosProyecto,
     });
 
     return (
@@ -68,21 +74,26 @@ const ProjectForm = ({ onSuccess, projectToEdit }: IProjectFormProps) => {
 
                     <FormField
                         control={form.control}
-                        name="estado"
+                        name="id_estado_proyecto"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Estado<span className="text-destructive">*</span></FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select 
+                                    onValueChange={(val) => field.onChange(val ? Number(val) : undefined)} 
+                                    defaultValue={field.value?.toString() || ''}
+                                    disabled={isEstadosLoading}
+                                >
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Seleccione el estado" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="Planeación">Planeación</SelectItem>
-                                        <SelectItem value="Desarrollo">Desarrollo</SelectItem>
-                                        <SelectItem value="Pruebas">Pruebas</SelectItem>
-                                        <SelectItem value="Liberado">Liberado</SelectItem>
+                                        {estadosProyecto?.map((est) => (
+                                            <SelectItem key={est.id_estado_proyecto} value={est.id_estado_proyecto.toString()}>
+                                                {est.nombre}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />

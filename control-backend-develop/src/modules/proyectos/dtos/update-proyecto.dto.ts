@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, MaxLength, IsNotEmpty } from 'class-validator';
-import { TipoProyecto, EstadoProyecto } from '../entities/proyectos.entity';
+import { TipoProyecto } from '../entities/proyectos.entity';
 
 export class UpdateProyectoDto {
     @ApiProperty({ description: 'ID del proyecto', example: 1 })
@@ -24,10 +24,10 @@ export class UpdateProyectoDto {
     @IsEnum(TipoProyecto)
     tipo?: TipoProyecto;
 
-    @ApiPropertyOptional({ description: 'Estado actual del proyecto', enum: EstadoProyecto })
+    @ApiPropertyOptional({ description: 'ID del Estado del Proyecto' })
+    @IsNumber({}, { message: 'El ID de estado debe ser un número' })
     @IsOptional()
-    @IsEnum(EstadoProyecto)
-    estado?: EstadoProyecto;
+    id_estado_proyecto?: number;
 
     @ApiPropertyOptional({ description: 'Fecha de inicio del proyecto', type: String, format: 'date' })
     @IsOptional()

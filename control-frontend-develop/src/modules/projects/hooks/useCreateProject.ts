@@ -16,11 +16,11 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
     const { form, handleSubmit, isPending } = useMutationForm({
         schema: createProjectSchema,
         defaultValues: {
-            id_proyecto: projectToEdit?.idProyecto || 0,
+            id_proyecto: projectToEdit?.idProyecto,
             nombre: projectToEdit?.nombre || '',
             descripcion: projectToEdit?.descripcion || '',
-            tipo: projectToEdit?.tipo || 'Nuevo Sistema',
-            estado: projectToEdit?.estado || 'Planeación',
+            tipo: projectToEdit?.tipo || undefined,
+            id_estado_proyecto: projectToEdit?.id_estado_proyecto || undefined,
             fecha_inicio: projectToEdit?.fechaInicio ? projectToEdit.fechaInicio : undefined,
             fecha_fin_estimada: projectToEdit?.fechaFinEstimada ? projectToEdit.fechaFinEstimada : undefined,
             porcentaje: projectToEdit?.porcentaje || 0,
@@ -31,7 +31,7 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
             nombre: 'nombre',
             descripcion: 'descripcion',
             tipo: 'tipo',
-            estado: 'estado',
+            id_estado_proyecto: 'id_estado_proyecto',
             fecha_inicio: 'fecha_inicio',
             fecha_fin_estimada: 'fecha_fin_estimada',
             porcentaje: 'porcentaje',
@@ -41,11 +41,11 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
         mutationFn: (data) => {
             if (projectToEdit) {
                 return updateProject({
-                    id_proyecto: projectToEdit.idProyecto,
+                    id_proyecto: data.id_proyecto,
                     nombre: data.nombre,
                     descripcion: data.descripcion ?? '',
                     tipo: data.tipo,
-                    estado: data.estado,
+                    id_estado_proyecto: data.id_estado_proyecto,
                     fecha_inicio: data.fecha_inicio ? dayjs(data.fecha_inicio).format('YYYY-MM-DD') : null,
                     fecha_fin_estimada: data.fecha_fin_estimada ? dayjs(data.fecha_fin_estimada).format('YYYY-MM-DD') : null,
                     porcentaje: data.porcentaje ?? 0,
@@ -56,7 +56,7 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
                 nombre: data.nombre,
                 descripcion: data.descripcion ?? '',
                 tipo: data.tipo,
-                estado: data.estado,
+                id_estado_proyecto: data.id_estado_proyecto,
                 fecha_inicio: data.fecha_inicio ? dayjs(data.fecha_inicio).format('YYYY-MM-DD') : null,
                 fecha_fin_estimada: data.fecha_fin_estimada ? dayjs(data.fecha_fin_estimada).format('YYYY-MM-DD') : null,
                 porcentaje: data.porcentaje ?? 0,

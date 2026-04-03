@@ -2,15 +2,14 @@ import { FilterOperator, PaginateConfig } from 'nestjs-paginate';
 import { ProyectosEntity } from '../entities/proyectos.entity';
 
 export const PROYECTOS_PAGINATION_CONFIG: PaginateConfig<ProyectosEntity> = {
-    sortableColumns: ['id_proyecto', 'nombre', 'estado', 'tipo', 'fecha_modificacion', 'tipoInforme.nombre'],
+    sortableColumns: ['id_proyecto', 'nombre', 'tipo', 'fecha_modificacion', 'tipoInforme.nombre', 'estadoProyecto.nombre'],
     nullSort: 'last',
     defaultSortBy: [['fecha_modificacion', 'DESC']],
-    searchableColumns: ['nombre', 'descripcion', 'estado', 'tipo', 'tipoInforme.nombre'],
+    searchableColumns: ['nombre', 'descripcion', 'tipo', 'tipoInforme.nombre', 'estadoProyecto.nombre'],
     maxLimit: 100,
     defaultLimit: 10,
-    relations: ['tipoInforme'],
+    relations: ['tipoInforme', 'estadoProyecto'],
     filterableColumns: {
-        estado: [FilterOperator.EQ, FilterOperator.IN],
         tipo: [FilterOperator.EQ, FilterOperator.IN],
         activo: [FilterOperator.EQ],
     },

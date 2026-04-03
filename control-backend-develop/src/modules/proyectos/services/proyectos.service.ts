@@ -23,11 +23,19 @@ export class ProyectosService {
         return paginate(query, queryBuilder, PROYECTOS_PAGINATION_CONFIG);
     }
 
-    async findPublicStatus(): Promise<Partial<ProyectosEntity>[]> {
+    async findPublicStatus(): Promise<any> {
         return this.proyectosRepository.find({
-            select: ['id_proyecto', 'nombre', 'estado', 'tipo', 'fecha_inicio', 'fecha_fin_estimada', 'porcentaje'],
             where: { activo: true },
-            order: { fecha_modificacion: 'DESC' },
+            select: [
+                'id_proyecto',
+                'nombre',
+                'tipo',
+                'fecha_inicio',
+                'fecha_fin_estimada',
+                'porcentaje',
+                'estadoProyecto'
+            ],
+            relations: ['estadoProyecto'],
         });
     }
 

@@ -23,7 +23,7 @@ export class TiposInformeService {
     async findPublicStatus(slug: string): Promise<TiposInformeEntity> {
         const tipoInforme = await this.tiposInformeRepository.findOne({
             where: { slug, activo: true },
-            relations: ['proyectos'],
+            relations: ['proyectos', 'proyectos.estadoProyecto'],
         });
         if (!tipoInforme) {
             throw new NotFoundException(`Tipo de informe no encontrado o inactivo`);

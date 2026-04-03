@@ -28,6 +28,9 @@ import { Route as AdminProjectsRouteImport } from './routes/admin/projects/route
 const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AdminIndexLazyImport = createFileRoute('/admin/')()
 const AdminTiposInformeLazyImport = createFileRoute('/admin/tipos-informe')()
+const AdminEstadosProyectoLazyImport = createFileRoute(
+  '/admin/estados-proyecto',
+)()
 const PublicStatusIndexLazyImport = createFileRoute('/public/status/')()
 const AuthResetPasswordIndexLazyImport = createFileRoute(
   '/auth/reset-password/',
@@ -76,6 +79,14 @@ const AdminTiposInformeLazyRoute = AdminTiposInformeLazyImport.update({
   getParentRoute: () => AdminRouteRoute,
 } as any).lazy(() =>
   import('./routes/admin/tipos-informe.lazy').then((d) => d.Route),
+)
+
+const AdminEstadosProyectoLazyRoute = AdminEstadosProyectoLazyImport.update({
+  id: '/estados-proyecto',
+  path: '/estados-proyecto',
+  getParentRoute: () => AdminRouteRoute,
+} as any).lazy(() =>
+  import('./routes/admin/estados-proyecto.lazy').then((d) => d.Route),
 )
 
 const PublicStatusRouteRoute = PublicStatusRouteImport.update({
@@ -249,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicStatusRouteImport
       parentRoute: typeof rootRoute
     }
+    '/admin/estados-proyecto': {
+      id: '/admin/estados-proyecto'
+      path: '/estados-proyecto'
+      fullPath: '/admin/estados-proyecto'
+      preLoaderRoute: typeof AdminEstadosProyectoLazyImport
+      parentRoute: typeof AdminRouteImport
+    }
     '/admin/tipos-informe': {
       id: '/admin/tipos-informe'
       path: '/tipos-informe'
@@ -363,6 +381,7 @@ interface AdminRouteRouteChildren {
   AdminProjectsRouteRoute: typeof AdminProjectsRouteRouteWithChildren
   AdminRolesRouteRoute: typeof AdminRolesRouteRouteWithChildren
   AdminUsersRouteRoute: typeof AdminUsersRouteRouteWithChildren
+  AdminEstadosProyectoLazyRoute: typeof AdminEstadosProyectoLazyRoute
   AdminTiposInformeLazyRoute: typeof AdminTiposInformeLazyRoute
   AdminIndexLazyRoute: typeof AdminIndexLazyRoute
 }
@@ -371,6 +390,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminProjectsRouteRoute: AdminProjectsRouteRouteWithChildren,
   AdminRolesRouteRoute: AdminRolesRouteRouteWithChildren,
   AdminUsersRouteRoute: AdminUsersRouteRouteWithChildren,
+  AdminEstadosProyectoLazyRoute: AdminEstadosProyectoLazyRoute,
   AdminTiposInformeLazyRoute: AdminTiposInformeLazyRoute,
   AdminIndexLazyRoute: AdminIndexLazyRoute,
 }
@@ -442,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRouteRouteWithChildren
   '/auth/reset-password': typeof AuthResetPasswordRouteRouteWithChildren
   '/public/status': typeof PublicStatusRouteRouteWithChildren
+  '/admin/estados-proyecto': typeof AdminEstadosProyectoLazyRoute
   '/admin/tipos-informe': typeof AdminTiposInformeLazyRoute
   '/admin/': typeof AdminIndexLazyRoute
   '/auth/': typeof AuthIndexLazyRoute
@@ -456,6 +477,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/estados-proyecto': typeof AdminEstadosProyectoLazyRoute
   '/admin/tipos-informe': typeof AdminTiposInformeLazyRoute
   '/admin': typeof AdminIndexLazyRoute
   '/auth': typeof AuthIndexLazyRoute
@@ -479,6 +501,7 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRouteRouteWithChildren
   '/auth/reset-password': typeof AuthResetPasswordRouteRouteWithChildren
   '/public/status': typeof PublicStatusRouteRouteWithChildren
+  '/admin/estados-proyecto': typeof AdminEstadosProyectoLazyRoute
   '/admin/tipos-informe': typeof AdminTiposInformeLazyRoute
   '/admin/': typeof AdminIndexLazyRoute
   '/auth/': typeof AuthIndexLazyRoute
@@ -503,6 +526,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/reset-password'
     | '/public/status'
+    | '/admin/estados-proyecto'
     | '/admin/tipos-informe'
     | '/admin/'
     | '/auth/'
@@ -516,6 +540,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/estados-proyecto'
     | '/admin/tipos-informe'
     | '/admin'
     | '/auth'
@@ -537,6 +562,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/reset-password'
     | '/public/status'
+    | '/admin/estados-proyecto'
     | '/admin/tipos-informe'
     | '/admin/'
     | '/auth/'
@@ -592,6 +618,7 @@ export const routeTree = rootRoute
         "/admin/projects",
         "/admin/roles",
         "/admin/users",
+        "/admin/estados-proyecto",
         "/admin/tipos-informe",
         "/admin/"
       ]
@@ -644,6 +671,10 @@ export const routeTree = rootRoute
       "children": [
         "/public/status/"
       ]
+    },
+    "/admin/estados-proyecto": {
+      "filePath": "admin/estados-proyecto.lazy.tsx",
+      "parent": "/admin"
     },
     "/admin/tipos-informe": {
       "filePath": "admin/tipos-informe.lazy.tsx",

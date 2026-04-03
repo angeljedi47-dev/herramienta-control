@@ -15,6 +15,7 @@ import { JwtAppModule } from './config/jtw/jwt-app.module';
 import { ReportsModule } from './config/reports/reports.module';
 import { ProyectosModule } from './modules/proyectos/proyectos.module';
 import { TiposInformeModule } from './modules/tipos-informe/tipos-informe.module';
+import { EstadosProyectoModule } from './modules/estados-proyecto/estados-proyecto.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { TiposInformeModule } from './modules/tipos-informe/tipos-informe.module
         UserModule,
         ProyectosModule,
         TiposInformeModule,
+        EstadosProyectoModule,
         EnvsModule,
         ModulosModule,
         DatabaseModule,
