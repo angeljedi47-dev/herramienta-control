@@ -73,7 +73,7 @@ const PublicProjectsStatus = () => {
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4 flex items-center gap-2">
                                 <span className="w-3 h-3 rounded-full bg-blue-500"></span>
-                                Informes en Proceso
+                                Sistemas en Proceso
                             </h2>
                             {renderProjectList(ongoingProjects)}
                         </div>
@@ -83,7 +83,7 @@ const PublicProjectsStatus = () => {
                         <div>
                             <h2 className="text-xl font-bold text-gray-700 mb-4 flex items-center gap-2 mt-8 pt-8 border-t">
                                 <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-                                Informes Finalizados
+                                Sistemas Finalizados
                             </h2>
                             {renderProjectList(finishedProjects)}
                         </div>
