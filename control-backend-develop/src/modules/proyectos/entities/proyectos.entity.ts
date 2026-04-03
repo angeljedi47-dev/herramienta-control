@@ -8,6 +8,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { UsuariosSistemaEntity } from 'src/modules/users/entities/usuarios-sistema.entity';
+import { TiposInformeEntity } from 'src/modules/tipos-informe/entities/tipos-informe.entity';
 
 export enum TipoProyecto {
     NUEVO_SISTEMA = 'Nuevo Sistema',
@@ -56,6 +57,9 @@ export class ProyectosEntity {
     @Column({ default: true })
     activo: boolean;
 
+    @Column({ type: 'int', default: 0 })
+    porcentaje: number;
+
     @CreateDateColumn({ type: 'timestamptz' })
     fecha_creacion: Date;
 
@@ -75,4 +79,11 @@ export class ProyectosEntity {
     @ManyToOne(() => UsuariosSistemaEntity)
     @JoinColumn({ name: 'id_usuario_modificacion' })
     usuario_modificacion: UsuariosSistemaEntity;
+
+    @Column({ type: 'int', nullable: true })
+    id_tipo_informe: number;
+
+    @ManyToOne(() => TiposInformeEntity, (tipo) => tipo.proyectos)
+    @JoinColumn({ name: 'id_tipo_informe' })
+    tipoInforme: TiposInformeEntity;
 }

@@ -23,6 +23,8 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
             estado: projectToEdit?.estado || 'Planeación',
             fecha_inicio: projectToEdit?.fechaInicio ? projectToEdit.fechaInicio : undefined,
             fecha_fin_estimada: projectToEdit?.fechaFinEstimada ? projectToEdit.fechaFinEstimada : undefined,
+            porcentaje: projectToEdit?.porcentaje || 0,
+            id_tipo_informe: projectToEdit?.id_tipo_informe || undefined,
         },
         errorMapping: {
             id_proyecto: 'id_proyecto',
@@ -32,6 +34,8 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
             estado: 'estado',
             fecha_inicio: 'fecha_inicio',
             fecha_fin_estimada: 'fecha_fin_estimada',
+            porcentaje: 'porcentaje',
+            id_tipo_informe: 'id_tipo_informe',
         },
         mutationKey: ['CREATE_PROJECT'],
         mutationFn: (data) => {
@@ -44,6 +48,8 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
                     estado: data.estado,
                     fecha_inicio: data.fecha_inicio ? dayjs(data.fecha_inicio).format('YYYY-MM-DD') : null,
                     fecha_fin_estimada: data.fecha_fin_estimada ? dayjs(data.fecha_fin_estimada).format('YYYY-MM-DD') : null,
+                    porcentaje: data.porcentaje ?? 0,
+                    id_tipo_informe: data.id_tipo_informe,
                 });
             }
             return createProject({
@@ -53,6 +59,8 @@ const useCreateProject = ({ onSuccess, projectToEdit }: IUseCreateProjectProps) 
                 estado: data.estado,
                 fecha_inicio: data.fecha_inicio ? dayjs(data.fecha_inicio).format('YYYY-MM-DD') : null,
                 fecha_fin_estimada: data.fecha_fin_estimada ? dayjs(data.fecha_fin_estimada).format('YYYY-MM-DD') : null,
+                porcentaje: data.porcentaje ?? 0,
+                id_tipo_informe: data.id_tipo_informe,
             });
         },
         cbSuccess: (data) => {

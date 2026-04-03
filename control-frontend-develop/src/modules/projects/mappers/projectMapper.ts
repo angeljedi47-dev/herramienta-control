@@ -12,6 +12,9 @@ export class ProjectMapper {
             fechaFinEstimada: data.fecha_fin_estimada ? new Date(data.fecha_fin_estimada) : null,
             fechaCreacion: new Date(data.fecha_creacion),
             fechaModificacion: new Date(data.fecha_modificacion),
+            porcentaje: data.porcentaje,
+            id_tipo_informe: data.id_tipo_informe,
+            tipoInforme: data.tipoInforme,
             activo: data.activo,
         };
     }
@@ -28,6 +31,7 @@ export class ProjectMapper {
             tipo: data.tipo,
             fechaInicio: data.fecha_inicio ? new Date(data.fecha_inicio) : null,
             fechaFinEstimada: data.fecha_fin_estimada ? new Date(data.fecha_fin_estimada) : null,
+            porcentaje: data.porcentaje,
         };
     }
 

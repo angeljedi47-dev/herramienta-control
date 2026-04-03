@@ -14,12 +14,14 @@ import { ModulosModule } from './modules/modulos/modulos.module';
 import { JwtAppModule } from './config/jtw/jwt-app.module';
 import { ReportsModule } from './config/reports/reports.module';
 import { ProyectosModule } from './modules/proyectos/proyectos.module';
+import { TiposInformeModule } from './modules/tipos-informe/tipos-informe.module';
 
 @Module({
     imports: [
         RolesModule,
         UserModule,
         ProyectosModule,
+        TiposInformeModule,
         EnvsModule,
         ModulosModule,
         DatabaseModule,

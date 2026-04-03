@@ -8,6 +8,9 @@ type QueryKey = [
         | 'COMBOBOX_SEARCH_ROLES'
         | 'GET_IMAGE'
         | 'PAGINATION_PROJECTS'
+        | 'GET_PROJECTS_PUBLIC_STATUS'
+        | 'GET_TIPOS_INFORME'
+        | 'GET_TIPO_INFORME_PUBLIC_STATUS'
     ),
     ...ReadonlyArray<unknown>,
 ];
@@ -21,7 +24,9 @@ type MutationKey = [
     | 'DELETE_USER'
     | 'RESTORE_USER'
     | 'CREATE_PROJECT'
-    | 'DELETE_PROJECT',
+    | 'DELETE_PROJECT'
+    | 'CREATE_TIPO_INFORME'
+    | 'DELETE_TIPO_INFORME',
 ];
 
 export type { QueryKey, MutationKey };

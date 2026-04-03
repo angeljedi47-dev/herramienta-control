@@ -8,6 +8,8 @@ export const createProjectSchema = z.object({
     estado: z.enum(['Planeación', 'Desarrollo', 'Pruebas', 'Liberado'], { required_error: 'El estado es requerido' }),
     fecha_inicio: z.date().optional().nullable(),
     fecha_fin_estimada: z.date().optional().nullable(),
+    porcentaje: z.coerce.number().min(0).max(100).optional(),
+    id_tipo_informe: z.coerce.number().optional(),
 });
 
 export type ICreateProjectSchema = z.infer<typeof createProjectSchema>;

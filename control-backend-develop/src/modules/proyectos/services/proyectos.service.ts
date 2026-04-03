@@ -25,7 +25,7 @@ export class ProyectosService {
 
     async findPublicStatus(): Promise<Partial<ProyectosEntity>[]> {
         return this.proyectosRepository.find({
-            select: ['id_proyecto', 'nombre', 'estado', 'tipo', 'fecha_inicio', 'fecha_fin_estimada'],
+            select: ['id_proyecto', 'nombre', 'estado', 'tipo', 'fecha_inicio', 'fecha_fin_estimada', 'porcentaje'],
             where: { activo: true },
             order: { fecha_modificacion: 'DESC' },
         });

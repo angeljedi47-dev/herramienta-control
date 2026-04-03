@@ -33,4 +33,12 @@ export class CreateProyectoDto {
     @IsOptional()
     @IsDateString()
     fecha_fin_estimada?: string;
+
+    @ApiPropertyOptional({ description: 'Porcentaje de avance del proyecto', type: Number, example: 50 })
+    @IsOptional()
+    porcentaje?: number;
+
+    @ApiPropertyOptional({ description: 'ID del Tipo de Informe asociado' })
+    @IsOptional()
+    id_tipo_informe?: number;
 }

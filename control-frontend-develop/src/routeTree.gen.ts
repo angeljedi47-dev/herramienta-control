@@ -27,6 +27,7 @@ import { Route as AdminProjectsRouteImport } from './routes/admin/projects/route
 
 const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AdminIndexLazyImport = createFileRoute('/admin/')()
+const AdminTiposInformeLazyImport = createFileRoute('/admin/tipos-informe')()
 const PublicStatusIndexLazyImport = createFileRoute('/public/status/')()
 const AuthResetPasswordIndexLazyImport = createFileRoute(
   '/auth/reset-password/',
@@ -35,6 +36,7 @@ const AuthLoginIndexLazyImport = createFileRoute('/auth/login/')()
 const AdminUsersIndexLazyImport = createFileRoute('/admin/users/')()
 const AdminRolesIndexLazyImport = createFileRoute('/admin/roles/')()
 const AdminProjectsIndexLazyImport = createFileRoute('/admin/projects/')()
+const PublicInformesSlugLazyImport = createFileRoute('/public/informes/$slug')()
 
 // Create/Update Routes
 
@@ -67,6 +69,14 @@ const AdminIndexLazyRoute = AdminIndexLazyImport.update({
   path: '/',
   getParentRoute: () => AdminRouteRoute,
 } as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
+
+const AdminTiposInformeLazyRoute = AdminTiposInformeLazyImport.update({
+  id: '/tipos-informe',
+  path: '/tipos-informe',
+  getParentRoute: () => AdminRouteRoute,
+} as any).lazy(() =>
+  import('./routes/admin/tipos-informe.lazy').then((d) => d.Route),
+)
 
 const PublicStatusRouteRoute = PublicStatusRouteImport.update({
   id: '/public/status',
@@ -164,6 +174,14 @@ const AdminProjectsIndexLazyRoute = AdminProjectsIndexLazyImport.update({
   import('./routes/admin/projects/index.lazy').then((d) => d.Route),
 )
 
+const PublicInformesSlugLazyRoute = PublicInformesSlugLazyImport.update({
+  id: '/public/informes/$slug',
+  path: '/public/informes/$slug',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/public/informes/$slug.lazy').then((d) => d.Route),
+)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -231,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicStatusRouteImport
       parentRoute: typeof rootRoute
     }
+    '/admin/tipos-informe': {
+      id: '/admin/tipos-informe'
+      path: '/tipos-informe'
+      fullPath: '/admin/tipos-informe'
+      preLoaderRoute: typeof AdminTiposInformeLazyImport
+      parentRoute: typeof AdminRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -244,6 +269,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth/'
       preLoaderRoute: typeof AuthIndexLazyImport
       parentRoute: typeof AuthRouteImport
+    }
+    '/public/informes/$slug': {
+      id: '/public/informes/$slug'
+      path: '/public/informes/$slug'
+      fullPath: '/public/informes/$slug'
+      preLoaderRoute: typeof PublicInformesSlugLazyImport
+      parentRoute: typeof rootRoute
     }
     '/admin/projects/': {
       id: '/admin/projects/'
@@ -331,6 +363,7 @@ interface AdminRouteRouteChildren {
   AdminProjectsRouteRoute: typeof AdminProjectsRouteRouteWithChildren
   AdminRolesRouteRoute: typeof AdminRolesRouteRouteWithChildren
   AdminUsersRouteRoute: typeof AdminUsersRouteRouteWithChildren
+  AdminTiposInformeLazyRoute: typeof AdminTiposInformeLazyRoute
   AdminIndexLazyRoute: typeof AdminIndexLazyRoute
 }
 
@@ -338,6 +371,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminProjectsRouteRoute: AdminProjectsRouteRouteWithChildren,
   AdminRolesRouteRoute: AdminRolesRouteRouteWithChildren,
   AdminUsersRouteRoute: AdminUsersRouteRouteWithChildren,
+  AdminTiposInformeLazyRoute: AdminTiposInformeLazyRoute,
   AdminIndexLazyRoute: AdminIndexLazyRoute,
 }
 
@@ -408,8 +442,10 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRouteRouteWithChildren
   '/auth/reset-password': typeof AuthResetPasswordRouteRouteWithChildren
   '/public/status': typeof PublicStatusRouteRouteWithChildren
+  '/admin/tipos-informe': typeof AdminTiposInformeLazyRoute
   '/admin/': typeof AdminIndexLazyRoute
   '/auth/': typeof AuthIndexLazyRoute
+  '/public/informes/$slug': typeof PublicInformesSlugLazyRoute
   '/admin/projects/': typeof AdminProjectsIndexLazyRoute
   '/admin/roles/': typeof AdminRolesIndexLazyRoute
   '/admin/users/': typeof AdminUsersIndexLazyRoute
@@ -420,8 +456,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin/tipos-informe': typeof AdminTiposInformeLazyRoute
   '/admin': typeof AdminIndexLazyRoute
   '/auth': typeof AuthIndexLazyRoute
+  '/public/informes/$slug': typeof PublicInformesSlugLazyRoute
   '/admin/projects': typeof AdminProjectsIndexLazyRoute
   '/admin/roles': typeof AdminRolesIndexLazyRoute
   '/admin/users': typeof AdminUsersIndexLazyRoute
@@ -441,8 +479,10 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRouteRouteWithChildren
   '/auth/reset-password': typeof AuthResetPasswordRouteRouteWithChildren
   '/public/status': typeof PublicStatusRouteRouteWithChildren
+  '/admin/tipos-informe': typeof AdminTiposInformeLazyRoute
   '/admin/': typeof AdminIndexLazyRoute
   '/auth/': typeof AuthIndexLazyRoute
+  '/public/informes/$slug': typeof PublicInformesSlugLazyRoute
   '/admin/projects/': typeof AdminProjectsIndexLazyRoute
   '/admin/roles/': typeof AdminRolesIndexLazyRoute
   '/admin/users/': typeof AdminUsersIndexLazyRoute
@@ -463,8 +503,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/reset-password'
     | '/public/status'
+    | '/admin/tipos-informe'
     | '/admin/'
     | '/auth/'
+    | '/public/informes/$slug'
     | '/admin/projects/'
     | '/admin/roles/'
     | '/admin/users/'
@@ -474,8 +516,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin/tipos-informe'
     | '/admin'
     | '/auth'
+    | '/public/informes/$slug'
     | '/admin/projects'
     | '/admin/roles'
     | '/admin/users'
@@ -493,8 +537,10 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/reset-password'
     | '/public/status'
+    | '/admin/tipos-informe'
     | '/admin/'
     | '/auth/'
+    | '/public/informes/$slug'
     | '/admin/projects/'
     | '/admin/roles/'
     | '/admin/users/'
@@ -509,6 +555,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   PublicStatusRouteRoute: typeof PublicStatusRouteRouteWithChildren
+  PublicInformesSlugLazyRoute: typeof PublicInformesSlugLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -516,6 +563,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   PublicStatusRouteRoute: PublicStatusRouteRouteWithChildren,
+  PublicInformesSlugLazyRoute: PublicInformesSlugLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -531,7 +579,8 @@ export const routeTree = rootRoute
         "/",
         "/admin",
         "/auth",
-        "/public/status"
+        "/public/status",
+        "/public/informes/$slug"
       ]
     },
     "/": {
@@ -543,6 +592,7 @@ export const routeTree = rootRoute
         "/admin/projects",
         "/admin/roles",
         "/admin/users",
+        "/admin/tipos-informe",
         "/admin/"
       ]
     },
@@ -595,6 +645,10 @@ export const routeTree = rootRoute
         "/public/status/"
       ]
     },
+    "/admin/tipos-informe": {
+      "filePath": "admin/tipos-informe.lazy.tsx",
+      "parent": "/admin"
+    },
     "/admin/": {
       "filePath": "admin/index.lazy.tsx",
       "parent": "/admin"
@@ -602,6 +656,9 @@ export const routeTree = rootRoute
     "/auth/": {
       "filePath": "auth/index.lazy.tsx",
       "parent": "/auth"
+    },
+    "/public/informes/$slug": {
+      "filePath": "public/informes/$slug.lazy.tsx"
     },
     "/admin/projects/": {
       "filePath": "admin/projects/index.lazy.tsx",

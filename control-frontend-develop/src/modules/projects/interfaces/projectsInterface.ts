@@ -10,6 +10,9 @@ export interface IProjectDB {
     fecha_fin_estimada: string | null;
     fecha_creacion: string;
     fecha_modificacion: string;
+    porcentaje: number;
+    id_tipo_informe?: number;
+    tipoInforme?: any;
     activo: boolean;
 }
 
@@ -23,6 +26,9 @@ export interface IProjectMapped {
     fechaFinEstimada: Date | null;
     fechaCreacion: Date;
     fechaModificacion: Date;
+    porcentaje: number;
+    id_tipo_informe?: number;
+    tipoInforme?: any;
     activo: boolean;
 }
 
@@ -41,6 +47,7 @@ export interface IProjectStatusDB {
     tipo: 'Nuevo Sistema' | 'Actualización' | 'Mantenimiento';
     fecha_inicio: string | null;
     fecha_fin_estimada: string | null;
+    porcentaje: number;
 }
 
 export interface IProjectStatusMapped {
@@ -50,6 +57,9 @@ export interface IProjectStatusMapped {
     tipo: 'Nuevo Sistema' | 'Actualización' | 'Mantenimiento';
     fechaInicio: Date | null;
     fechaFinEstimada: Date | null;
+    porcentaje: number;
+    id_tipo_informe?: number;
+    tipoInforme?: any;
 }
 export type IProjectStatusResponseDB = IResponse<IProjectStatusDB[]>;
 export type IProjectStatusResponse = IResponse<IProjectStatusMapped[]>;
@@ -57,7 +67,8 @@ export type IProjectStatusResponse = IResponse<IProjectStatusMapped[]>;
 export interface ICreateProject
     extends Pick<
         IProjectDB,
-        'nombre' | 'descripcion' | 'tipo' | 'estado' | 'fecha_inicio' | 'fecha_fin_estimada'
+        'nombre' | 'descripcion' | 'tipo' | 'estado' | 'fecha_inicio' | 'fecha_fin_estimada' | 'porcentaje'
     > {
     id_proyecto?: number;
+    id_tipo_informe?: number;
 }

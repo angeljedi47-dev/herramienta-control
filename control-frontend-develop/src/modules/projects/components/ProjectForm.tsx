@@ -6,6 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useCreateProject } from '../hooks';
 import { IProjectMapped } from '../interfaces';
+import { useQuery } from '@tanstack/react-query';
+import { getTiposInforme } from '@/modules/tipos-informe/apis/tiposInforme.api';
 
 interface IProjectFormProps {
     onSuccess: () => void;
@@ -16,6 +18,11 @@ const ProjectForm = ({ onSuccess, projectToEdit }: IProjectFormProps) => {
     const { handleSubmit, isPending, form } = useCreateProject({
         onSuccess,
         projectToEdit,
+    });
+
+    const { data: tiposInforme, isLoading: isTiposLoading } = useQuery({
+        queryKey: ['GET_TIPOS_INFORME'],
+        queryFn: getTiposInforme,
     });
 
     return (
@@ -94,6 +101,44 @@ const ProjectForm = ({ onSuccess, projectToEdit }: IProjectFormProps) => {
                         form={form}
                         name="fecha_fin_estimada"
                         label="Fecha de Fin Estimada"
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <TextField
+                        form={form}
+                        name="porcentaje"
+                        label="Porcentaje de avance (%)"
+                        inputOptions={{ placeholder: 'Ej. 50', type: 'number', min: 0, max: 100 }}
+                    />
+                    
+                    <FormField
+                        control={form.control}
+                        name="id_tipo_informe"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Tipo de Informe (Catálogo)</FormLabel>
+                                <Select 
+                                    onValueChange={(val) => field.onChange(val ? Number(val) : undefined)} 
+                                    defaultValue={field.value?.toString() || ''}
+                                    disabled={isTiposLoading}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Seleccione el tipo de informe" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {tiposInforme?.map((tipo) => (
+                                            <SelectItem key={tipo.id_tipo_informe} value={tipo.id_tipo_informe.toString()}>
+                                                {tipo.nombre}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
                 </div>
 

@@ -29,4 +29,10 @@ export const navOptions: INavSidebarItem[] = [
         url: '/admin/projects',
         icon: Briefcase,
     },
+    {
+        id: 5,
+        name: 'Tipos de Informe',
+        url: '/admin/tipos-informe',
+        icon: Briefcase,
+    },
 ];
