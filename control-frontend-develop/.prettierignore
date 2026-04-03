@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Configuration files
+.gitlab-ci.yml
+components.json
+tailwind.config.js
+postcss.config.js
+vite.config.ts
+tsconfig*.json
+eslint.config.js
+
+# Documentation
+README.md
+*.md
+
+# Generated files
+src/routeTree.gen.ts
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db 

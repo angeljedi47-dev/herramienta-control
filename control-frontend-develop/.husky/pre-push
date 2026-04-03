@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Ejecutando validaciones antes del push..."
+
+echo "📝 Verificando formato..."
+pnpm format:check
+
+echo "🔧 Verificando linting..."
+pnpm lint:check
+
+echo "📋 Verificando tipos de TypeScript (build mode)..."
+pnpm type-check:build
+
+echo "✅ Todas las validaciones pasaron correctamente!" 

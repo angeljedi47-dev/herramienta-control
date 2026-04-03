@@ -1,0 +1,230 @@
+# =============================================================================
+# VARIABLES DE ENTORNO REQUERIDAS EN GITLAB SETTINGS > CI/CD > VARIABLES
+# =============================================================================
+#
+# VARIABLES OBLIGATORIAS (solo para deploy):
+# SSH_PRIVATE_KEY=tu_clave_privada_ssh
+# SSH_USER=usuario_ssh
+# SERVER_IP=ip_del_servidor
+# DEPLOY_DIR_STAGING=/ruta/staging
+# DEPLOY_DIR_PRODUCTION=/ruta/produccion
+# URL_STAGING=http://staging.tudominio.com
+# URL_PRODUCTION=http://produccion.tudominio.com
+#
+# VARIABLES OBLIGATORIAS (para builds):
+# VITE_API_URL_STAGING=http://api-staging.tudominio.com
+# VITE_API_URL_PRODUCTION=http://api-produccion.tudominio.com
+#
+# VARIABLES OPCIONALES (tienen valores por defecto):
+# NODE_VERSION=22
+# PNPM_VERSION=8
+# VITE_BUILD_DIR=dist
+# STAGING_BRANCH=develop
+# PRODUCTION_BRANCH=main
+#
+# =============================================================================
+
+stages:
+  - setup
+  - validate
+  - lint
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: "22"
+  PNPM_VERSION: "8"
+  VITE_BUILD_DIR: "dist"
+  STAGING_BRANCH: "develop"
+  PRODUCTION_BRANCH: "main"
+
+.node_base: &node_base
+  image: node:${NODE_VERSION}
+  before_script:
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install --frozen-lockfile --prefer-offline
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store/
+      - node_modules/
+    policy: pull-push
+
+.node_with_cache: &node_with_cache
+  image: node:${NODE_VERSION}
+  before_script:
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - pnpm config set store-dir .pnpm-store
+    - test -d node_modules || pnpm install --frozen-lockfile --prefer-offline
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store/
+      - node_modules/
+    policy: pull
+
+.deploy_base: &deploy_base
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq openssh-client rsync
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null\n" > ~/.ssh/config
+    - chmod 600 ~/.ssh/config
+
+install_dependencies:
+  <<: *node_base
+  stage: setup
+  script:
+    - echo "Dependencias instaladas y cacheadas"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+
+validate_dependencies:
+  <<: *node_with_cache
+  stage: validate
+  script:
+    - pnpm audit --audit-level moderate
+  needs: ["install_dependencies"]
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+
+lint_code:
+  <<: *node_with_cache
+  stage: lint
+  script:
+    - pnpm lint
+  needs: ["install_dependencies"]
+  artifacts:
+    paths:
+      - .eslintcache
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+
+format_check:
+  <<: *node_with_cache
+  stage: lint
+  script:
+    - pnpm format:check
+  needs: ["install_dependencies"]
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+
+type_check:
+  <<: *node_with_cache
+  stage: lint
+  script:
+    - pnpm tsc --noEmit
+  needs: ["install_dependencies"]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+
+build_staging:
+  <<: *node_with_cache
+  stage: build
+  variables:
+    VITE_API_URL: $VITE_API_URL_STAGING
+    VITE_NODE_ENV: "staging"
+  script:
+    - pnpm build
+    - tar -czf build-staging.tar.gz ${VITE_BUILD_DIR}/
+  needs: ["install_dependencies"]
+  artifacts:
+    paths:
+      - build-staging.tar.gz
+      - ${VITE_BUILD_DIR}/
+    expire_in: 2h
+  rules:
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+
+build_production:
+  <<: *node_with_cache
+  stage: build
+  variables:
+    VITE_API_URL: $VITE_API_URL_PRODUCTION
+    VITE_NODE_ENV: "production"
+  script:
+    - pnpm build
+    - tar -czf build-production.tar.gz ${VITE_BUILD_DIR}/
+  needs: ["install_dependencies"]
+  artifacts:
+    paths:
+      - build-production.tar.gz
+      - ${VITE_BUILD_DIR}/
+    expire_in: 2h
+  rules:
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+
+build_artifacts:
+  <<: *node_with_cache
+  stage: build
+  script:
+    - pnpm build
+    - tar -czf build-${CI_COMMIT_REF_SLUG}.tar.gz ${VITE_BUILD_DIR}/
+  needs: ["install_dependencies"]
+  artifacts:
+    paths:
+      - build-${CI_COMMIT_REF_SLUG}.tar.gz
+      - ${VITE_BUILD_DIR}/
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH != $STAGING_BRANCH
+    - if: $CI_COMMIT_BRANCH != $PRODUCTION_BRANCH
+
+deploy_staging:
+  <<: *deploy_base
+  stage: deploy
+  script:
+    - |
+      if [ -z "$SSH_PRIVATE_KEY" ] || [ -z "$SSH_USER" ] || [ -z "$SERVER_IP" ] || [ -z "$DEPLOY_DIR_STAGING" ]; then
+        echo "⚠️ Variables de deploy no configuradas. Saltando deploy a staging."
+        exit 0
+      fi
+    - scp build-staging.tar.gz $SSH_USER@$SERVER_IP:${DEPLOY_DIR_STAGING}
+    - ssh $SSH_USER@$SERVER_IP "cd ${DEPLOY_DIR_STAGING} && tar -xzf build-staging.tar.gz && rm build-staging.tar.gz"
+  environment:
+    name: staging
+    url: $URL_STAGING
+  needs: ["build_staging"]
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $STAGING_BRANCH
+
+deploy_production:
+  <<: *deploy_base
+  stage: deploy
+  script:
+    - |
+      if [ -z "$SSH_PRIVATE_KEY" ] || [ -z "$SSH_USER" ] || [ -z "$SERVER_IP" ] || [ -z "$DEPLOY_DIR_PRODUCTION" ]; then
+        echo "⚠️ Variables de deploy no configuradas. Saltando deploy a producción."
+        exit 0
+      fi
+    - scp build-production.tar.gz $SSH_USER@$SERVER_IP:${DEPLOY_DIR_PRODUCTION}
+    - ssh $SSH_USER@$SERVER_IP "cd ${DEPLOY_DIR_PRODUCTION} && tar -xzf build-production.tar.gz && rm build-production.tar.gz"
+  environment:
+    name: production
+    url: $URL_PRODUCTION
+  needs: ["build_production"]
+  when: manual
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH

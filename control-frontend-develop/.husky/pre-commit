@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Ejecutando validaciones antes del commit..."
+
+echo "🧹 Ejecutando lint-staged..."
+npx lint-staged
+
+echo "📋 Verificando tipos de TypeScript (build mode)..."
+pnpm type-check:build
+
+echo "✅ Pre-commit completado exitosamente!"

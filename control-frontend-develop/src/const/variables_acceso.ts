@@ -1,0 +1,14 @@
+export enum MODULOS_ACCESO {
+    USUARIOS = 1,
+    ROLES = 2,
+}
+
+export enum OPERACIONES_ACCESO {
+    AGREGAR_USUARIO = 1,
+    EDITAR_USUARIO = 2,
+    ELIMINAR_USUARIO = 3,
+    RESTAURAR_USUARIO = 4,
+    AGREGAR_ROL = 5,
+    EDITAR_ROL = 6,
+    ELIMINAR_ROL = 7,
+}

@@ -1,0 +1,10 @@
+# Dependencias
+node_modules/
+.DS_Store
+
+# Variables de entorno (Seguridad)
+.env
+
+# Builds
+dist/
+build/
